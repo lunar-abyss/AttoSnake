@@ -1,0 +1,90 @@
+10 hs=0
+20 rem init section
+30 tick=0
+40 sw=40
+50 sh=20
+60 hx=sw/2
+70 hy=sh/2
+80 fx=10
+90 fy=10
+100 dir=0
+110 dim tails
+120 push hx-1, tails
+130 push hy, tails
+140 push hx-2, tails
+150 push hy, tails
+160 volume 0.5
+170 rem loop section
+180 if key="ArrowRight"
+190 dir=0
+200 else if key="ArrowDown"
+210 dir=1
+220 else if key="ArrowLeft"
+230 dir=2
+240 else if key="ArrowUp"
+250 dir=3
+260 end
+270 push hx, tails
+280 push hy, tails
+290 if dir=0
+300 hx=hx+1
+310 else if dir=1
+320 hy=hy+1
+330 else if dir=2
+340 hx=hx-1
+350 else if dir=3
+360 hy=hy-1
+370 end
+380 if hx>sw-1
+390 hx=0
+400 else if hx<0
+410 hx=sw-1
+420 end
+430 if hy>sh-2
+440 hy=0
+450 else if hy<0
+460 hy=sh-2
+470 end
+480 remove tails, 0
+490 remove tails, 0
+500 if hx=fx and hy=fy
+510 fx = floor(random*(sw-2))+1
+520 fy = floor(random*(sh-2))+1
+530 push hx, tails
+540 push hy, tails
+550 play "f5", 0.2
+560 end
+570 rem render section
+580 bg "lightgray"
+590 cls
+600 pos fx, fy
+610 bg "red"
+620 print " ";
+630 pos hx, hy
+640 bg "lightgreen"
+650 print " ";
+660 bg "green"
+670 for i=len(tails)-2 to 0 step -2
+680 if hx=tails[i] and hy=tails[i+1] and i!=len(tails)-2
+690 hs=max(len(tails)/2-2, hs)
+700 note "a4", 0.1
+710 note "f4", 0.4
+720 delay 500
+730 goto 20
+740 end
+750 pos tails[i], tails[i+1]
+760 print " ";
+770 next
+780 bg "lightgray"
+790 pos 0, 19
+800 print "Score: ";len(tails)/2-2;
+810 pos 20, 19
+820 print "Highscore: ";hs;
+830 play "f3", 0.1
+840 rem looper
+850 tick=tick+1
+860 frame
+870 if tick mod 4 = 0
+880 goto 170
+890 end
+900 goto 840
